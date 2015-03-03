@@ -10,24 +10,24 @@
   display: inline;
 }
 
-.jumbotron {
+.jumbotron-home{
   background-image:url('../img/Ericeira.jpg');
   height: 600px;
 }
 
-.jumbotron .container {
+.jumbotron-home .container {
   position: relative;
   top:100px;
 }
 
-.jumbotron h1 {
+.jumbotron-home h1 {
   color: #fff;
   font-size: 48px;  
   font-family: 'Shift', sans-serif;
   font-weight: bold;
 }
 
-.jumbotron p {
+.jumbotron-home p {
   font-size: 20px;
   color: #fff;
 }
@@ -59,4 +59,12 @@
 
 .learn-more a {
   color: #00b0ff;
+}
+
+.portions {
+  margin-top: 10px;
+}
+
+.calculate-line{
+  background-color: #EEE;
 }
