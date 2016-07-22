@@ -40,15 +40,41 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
-				<textarea class="form-control" id="originalRecipe" name="originalRecipe" placeholder="Insert Your Ingredient list here!" rows="3" required></textarea>
+				<textarea class="form-control" id="originalRecipe" name="originalRecipe" placeholder="Insert Your Ingredient list here!" rows="2" required></textarea>
 			</div>
 			<div class="col-md-6">
-				<input type="number" class="form-control" id="originalPortions" placeholder="Recipe Original Portions">
-				<div class="portions">
+				<h3 class="subtitle">How do you want to calculate?</h3>
+				<form>
+					<div class="col-md-4 no-padding-left">
+						<input type="radio" id="portionsRadio" name="selectMode" value="By Portions">By Portions
+					</div>
+					<div class="col-md-4">
+						<input type="radio" id="amountRadio" name="selectMode" value="By Amount">By Amount
+					</div>
+				</form>
+				<select class="hidden" id="selectMode">
+				<option>By Portions</option>
+				<option>By Amount</option>
+				</select>
+			</div>
+			<div class="col-md-12 text-right calculate-line">
+				<button class="btn btn-primary" onclick="modeSelected()">Next</button>
+			</div>
+
+			<div class="col-md-12 hidden" id="portionsDiv">
+				<div class="col-md-6">
+					<input type="number" class="form-control" id="originalPortions" placeholder="Recipe Original Portions">
+				</div>
+				<div class="col-md-6 portions">
 					<input type="number" class="form-control" id="newPortions" placeholder="New Portions">
 				</div>
 			</div>
-			<div class="col-md-12 text-right calculate-line">
+
+			<div class="col-md-12 hidden" id="amountDiv">
+				<input type="number" class="form-control" id="newAmount" placeholder="New Amount">
+				<select id="ingredientsSelect"></select>
+			</div>
+			<div class="col-md-12 text-right calculate-line hidden">
 				<button class="btn btn-primary" onclick="execute()">Calculate</button>
 			</div>
 		</div>

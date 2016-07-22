@@ -21,6 +21,25 @@ var originalPortionsInput = 'originalPortions';
 var newPortionsInput = 'newPortions';
 var resultDiv = 'resultDiv';
 var resultUl = 'result';
+var amountRadio = 'portionsRadio';
+var amountDiv = 'amountDiv';
+var portionsRadio = 'portionsRadio';
+var portionsDiv = 'portionsDiv';
+
+/************ User Interface functions****************/
+function modeSelected()
+{
+	if(document.getElementById(amountRadio).checked)
+	{
+		$('#'+amountDiv).removeClass('hidden');
+		$('#'+portionsDiv).addClass('hidden');
+	}
+	else if(document.getElementById(portionsRadio).checked)
+	{
+		$('#'+portionsDiv).removeClass('hidden');
+		$('#'+amountDiv).addClass('hidden');
+	}
+}
 
 function execute()
 {
