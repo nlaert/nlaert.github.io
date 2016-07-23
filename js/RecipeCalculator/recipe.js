@@ -143,7 +143,7 @@ function newIngredient(line) {
 	var space = line.indexOf(' ');
 	if (space < 0)
 		throw 'Invalid Format';
-	var amount = parseInt(line.substring(0,space));
+	var amount = parseFloat(line.substring(0,space));
 	return new Ingredient(line.substring(space + 1), amount);
 }
 
