@@ -1,8 +1,14 @@
-function Ingredient (name, amount)
-{
+/*$('#' + ingredientsDropdown + ' li a').on('click', function(){
+    selectedIngredient = $(this).text();
+});
+*/
+
+/***************** Ingredient object *****************/
+
+function Ingredient (name, amount) {
 	this.name = name;
 	this.amount = amount;
-};
+}
 
 Ingredient.prototype.toString = function() {
 	if(this.hasAmount())
@@ -11,60 +17,142 @@ Ingredient.prototype.toString = function() {
 };
 
 Ingredient.prototype.hasAmount = function() {
-	return this.amount > 0;
+	return this.amount != undefined && this.amount > 0;
 };
 
-var ingredients = [];
-/************ HTML ids to be used ********************/
+/***************** Global Variables ******************/
+
+var ingredients = [];		//array with the list of ingredients
+var calculatingByAmount;	//boolean that indicates the option selected
+var selectedIngredient;		//string with the name of the ingredient selected
+
+/**************** HTML ids to be used ****************/
+
 var recipeInput = 'originalRecipe';
+
+var portionsButton = 'portionsButton';
+var portionsDiv = 'portionsDiv';
 var originalPortionsInput = 'originalPortions';
 var newPortionsInput = 'newPortions';
+
+var amountButton = 'amountButton';
+var amountDiv = 'amountDiv';
+var newAmountInput = 'newAmount';
+var ingredientsDropdown = 'ingredientsDropdown';
+
+var calculateLineDiv = 'calculateLine';
 var resultDiv = 'resultDiv';
 var resultUl = 'result';
-var amountRadio = 'amountRadio';
-var amountDiv = 'amountDiv';
-var portionsRadio = 'portionsRadio';
-var portionsDiv = 'portionsDiv';
 
-/************ User Interface functions****************/
-function modeSelected()
-{
-	if(document.getElementById(amountRadio).checked)
-	{
-		$('#'+amountDiv).removeClass('hidden');
-		$('#'+portionsDiv).addClass('hidden');
-	}
-	else if(document.getElementById(portionsRadio).checked)
-	{
-		$('#'+portionsDiv).removeClass('hidden');
-		$('#'+amountDiv).addClass('hidden');
+/******************* GUI functions *******************/
+
+function hideElement(elementId) {
+	$('#'+elementId).addClass('hidden');
+}
+
+function showElement(elementId) {
+	$('#'+elementId).removeClass('hidden');
+}
+
+/*function clearAmountDropdown() {
+	var ingredientsUl = document.getElementById(ingredientsDropdown);
+    ingredientsUl.innerHTML = '';
+}*/
+
+function clearAmountDropdown() {
+	var selectbox = document.getElementById(ingredientsDropdown);
+    for(var i = selectbox.options.length - 1 ; i >= 0 ; i--)
+    {
+        selectbox.remove(i);
+    }
+}
+
+function fillAmountDropdown() {
+	readRecipe();
+	clearAmountDropdown();
+	var select = document.getElementById(ingredientsDropdown);
+	for (var i = 0; i < ingredients.length; i++) {
+		var option = document.createElement("option");
+		option.text = ingredients[i].name;
+		option.value = i;
+		select.appendChild(option);
 	}
 }
 
-function execute()
-{
+/*function fillAmountDropdown() {
 	readRecipe();
-	var originalPortions = document.getElementById(originalPortionsInput).value;
-	var newPortions = document.getElementById(newPortionsInput).value;
-	calculateByPortions(originalPortions, newPortions);
+	clearAmountDropdown();
+	var ingredientsUl = document.getElementById(ingredientsDropdown);
+	for (var i = 0; i < ingredients.length; i++) {
+		var li = document.createElement('li');
+		var a = document.createElement('a');
+		a.setAttribute('href', '#');
+		a.appendChild(document.createTextNode(ingredients[i].name));
+		li.appendChild(a);
+		ingredientsUl.appendChild(li);
+	}
+}*/
+
+function setAsActive(elementId) {
+    $('#' + elementId).addClass('active');
+}
+
+function setAsInactive(elementId){
+	$('#' + elementId).removeClass('active');
+}
+
+function byPortions() {
+	showElement(portionsDiv);
+	hideElement(amountDiv);
+	setAsActive(portionsButton);
+	setAsInactive(amountButton);
+	calculatingByAmount = false;
+}
+
+function byAmount() {
+	showElement(amountDiv);
+	hideElement(portionsDiv);
+	fillAmountDropdown();
+	setAsActive(amountButton);
+	setAsInactive(portionsButton);
+	calculatingByAmount = true;
+}
+
+function showCalculate() {
+	showElement(calculateLineDiv);
+}
+
+function execute() {
+	readRecipe();
+	if(calculatingByAmount)
+		calculateByAmount();
+	else
+		calculateByPortions(originalPortions, newPortions);
 	printRecipe();
 }
 
-function readRecipe()
-{
+function getElementValueById(elementId) {
+	return document.getElementById(elementId).value;
+}
+
+function getOption() {
+	var element = document.getElementById(ingredientsDropdown);
+	return element.options[element.selectedIndex].value;
+}
+
+/*************** Calculator Functions ****************/
+
+function readRecipe() {
+	ingredients = [];
 	var text = document.getElementById(recipeInput).value;
 	var lines = text.split(/\n/);
-	console.log(lines);
-	lines.forEach(function(line)
-	{
+	lines.forEach(function(line) {
 		var ing = newIngredient(line);
 		ingredients.push(ing);
 	});
-
 }
 
-function newIngredient(line)
-{
+function newIngredient(line) {
 	line = line.trim();
 	var firstChar = line.charAt(0);
 	if ((firstChar != ',' && firstChar!='.') && (firstChar < '0' || firstChar > '9'))
@@ -76,27 +164,50 @@ function newIngredient(line)
 	return new Ingredient(line.substring(space + 1), amount);
 }
 
-function calculateByPortions(originalPortions, newPortions)
-{
-	var percent = newPortions / originalPortions;
-	ingredients.forEach(function(ingredient)
-		{
-			calculate(ingredient, percent);
-		});
-}
-
-function calculate(ingredient, percent)
-{
-	if (ingredient.hasAmount())
-		ingredient.amount = ingredient.amount * percent;
-}
-
-function printRecipe()
-{
-	var newRecipe = '';
-	ingredients.forEach(function (elem) {
-		 newRecipe = newRecipe + '<li class="list-group-item">' + elem.toString() + '</li>';
+function calculate(percent) {
+	ingredients.forEach(function(ingredient) {
+		if (ingredient.hasAmount())
+			ingredient.amount = ingredient.amount * percent;
 	});
-	document.getElementById(resultDiv).className = 'row';
-	document.getElementById(resultUl).innerHTML = newRecipe;
+}
+
+function calculateByPortions() {
+	var originalPortions = getElementValueById(originalPortionsInput);
+	var newPortions = getElementValueById(newPortionsInput);
+	var percent = newPortions / originalPortions;
+	calculate(percent);
+}
+
+function calculateByAmount() {
+	var newAmount = getElementValueById(newAmountInput);
+	var idx = getOption();
+	if(ingredients[idx].hasAmount()){
+		var percent = newAmount / ingredients[idx].amount;
+		calculate(percent);
+	}
+}
+
+/*function calculateByAmount() {
+	var newAmount = getElementValueById(newAmountInput);
+	var idx = getOption();
+	for (var i = 0; i < ingredients.length; i++) {
+		if(ingredients[i].name === selectedIngredient) {
+			var percent = newAmount / ingredients[i].amount;
+			calculate(percent);
+			break;
+		}
+	}
+}*/
+
+function printRecipe() {
+	var newRecipe = '';
+	var resultElement = document.getElementById(resultUl);
+	resultElement.innerHTML = '';
+	ingredients.forEach(function (ingredient) {
+		var li = document.createElement('li');
+		li.classList.add('list-group-item');
+		li.appendChild(document.createTextNode(ingredient.toString()));
+		resultElement.appendChild(li);
+	});
+	showElement(resultDiv);
 }
