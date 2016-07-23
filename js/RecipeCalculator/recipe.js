@@ -54,11 +54,6 @@ function showElement(elementId) {
 	$('#'+elementId).removeClass('hidden');
 }
 
-/*function clearAmountDropdown() {
-	var ingredientsUl = document.getElementById(ingredientsDropdown);
-    ingredientsUl.innerHTML = '';
-}*/
-
 function clearAmountDropdown() {
 	var selectbox = document.getElementById(ingredientsDropdown);
     for(var i = selectbox.options.length - 1 ; i >= 0 ; i--)
@@ -79,20 +74,6 @@ function fillAmountDropdown() {
 	}
 }
 
-/*function fillAmountDropdown() {
-	readRecipe();
-	clearAmountDropdown();
-	var ingredientsUl = document.getElementById(ingredientsDropdown);
-	for (var i = 0; i < ingredients.length; i++) {
-		var li = document.createElement('li');
-		var a = document.createElement('a');
-		a.setAttribute('href', '#');
-		a.appendChild(document.createTextNode(ingredients[i].name));
-		li.appendChild(a);
-		ingredientsUl.appendChild(li);
-	}
-}*/
-
 function setAsActive(elementId) {
     $('#' + elementId).addClass('active');
 }
@@ -107,6 +88,7 @@ function byPortions() {
 	setAsActive(portionsButton);
 	setAsInactive(amountButton);
 	calculatingByAmount = false;
+	showCalculate();
 }
 
 function byAmount() {
@@ -116,6 +98,7 @@ function byAmount() {
 	setAsActive(amountButton);
 	setAsInactive(portionsButton);
 	calculatingByAmount = true;
+	showCalculate();
 }
 
 function showCalculate() {
@@ -186,18 +169,6 @@ function calculateByAmount() {
 		calculate(percent);
 	}
 }
-
-/*function calculateByAmount() {
-	var newAmount = getElementValueById(newAmountInput);
-	var idx = getOption();
-	for (var i = 0; i < ingredients.length; i++) {
-		if(ingredients[i].name === selectedIngredient) {
-			var percent = newAmount / ingredients[i].amount;
-			calculate(percent);
-			break;
-		}
-	}
-}*/
 
 function printRecipe() {
 	var newRecipe = '';
