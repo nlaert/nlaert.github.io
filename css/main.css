@@ -61,21 +61,3 @@
   color: #00b0ff;
 }
 
-.margin-top {
-  margin-top: 1em;
-}
-
-.calculate-line{
-  background-color: #EEE;
-  margin-top: 1em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-}
-
-.no-padding-left{
-  padding-left: 0;
-}
-
-.subtitle{
-  margin-top: 0;
-}
